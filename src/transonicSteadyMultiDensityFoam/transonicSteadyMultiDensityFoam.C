@@ -86,7 +86,7 @@ int main(int argc, char *argv[])
     		// Update primitive boundaries
     		p.correctBoundaryConditions();
 		U.correctBoundaryConditions();
-    		T.correctBoundaryConditions();
+    		h.correctBoundaryConditions();
 
 		// solve the approximate Riemann problem for this time step
 		// reconstruct numerical fluxes at faces in a proper way
@@ -308,26 +308,27 @@ int main(int argc, char *argv[])
 		// time integration of T
         	solve
         	(
-            	    fvm::ddt(T) == -TResidual
+//             	    fvm::ddt(T) == -TResidual
+            	    fvm::ddt(h) == -thermo.Cp()*TResidual
         	);
 //        	Info<< "End Solving Equationset" << endl;
 
 		// not sure if this is needed here		
     		p.correctBoundaryConditions();
 		U.correctBoundaryConditions();
-    		T.correctBoundaryConditions();
+//     		T.correctBoundaryConditions();
 
 /*****************************************************************/
 //	This can be commented out if using a Tpsi thermo class,
 //	otherwhise T-field is evaluated twice
 
 		//Update static enthalpy, only valid for perfect gases
-		h = thermo.Cp()*T;
+// 		h = thermo.Cp()*T;
     		// correct boundary conditions of static enthalpy
     		h.correctBoundaryConditions();
 		
     		// bound enthalpy
-    		//boundMinMax(h,hMin,hMax);		
+    		boundMinMax(h,hMin,hMax);
 		
 /****************************************************************/
 		
